@@ -1,0 +1,11 @@
+#########UNREAL GEENRATED FILES#########
+*/BuildingEscape/Build/
+*/BuildingEscape/Binaries/
+*/BuildingEscape/DerivedDataCache/
+*/BuildingEscape/Intermediate/
+*/BuildingEscape/Saved/
+03_BuildingEscape/BuildingEscape/Content/StarterContent/
+
+#########VS GEENRATED FILES#########
+*.VC.db
+*.vs
