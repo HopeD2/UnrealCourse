@@ -2,6 +2,8 @@
 
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/PlayerController.h"
+#include "Engine/World.h"
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -9,7 +11,7 @@ UOpenDoor::UOpenDoor()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	m_hasDoorOpened = false;
+	HasDoorOpened = false;
 }
 
 
@@ -17,6 +19,8 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ActorThatOpensDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 
@@ -25,13 +29,39 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (!m_hasDoorOpened) {
+	if (PressurePlate->IsOverlappingActor(ActorThatOpensDoor)) 
+	{
+		OpenDoor();
+	}
+	else {
+		CloseDoor();
+	}
+
+}
+
+void UOpenDoor::OpenDoor()
+{
+	if (!HasDoorOpened) {
 		FRotator rotator = GetOwner()->GetActorRotation();
 		UE_LOG(LogTemp, Warning, TEXT("Current Yaw is : %f"), rotator.Yaw);
 		rotator.Yaw -= 90;
 		UE_LOG(LogTemp, Warning, TEXT("Current Yaw is : %f"), rotator.Yaw);
 		GetOwner()->SetActorRotation(rotator);
-		m_hasDoorOpened = true;
+		HasDoorOpened = true;
 	}
 }
+
+void UOpenDoor::CloseDoor()
+{
+	if (HasDoorOpened)
+	{
+		FRotator rotator = GetOwner()->GetActorRotation();
+		UE_LOG(LogTemp, Warning, TEXT("Current Yaw is : %f"), rotator.Yaw);
+		rotator.Yaw += 90;
+		UE_LOG(LogTemp, Warning, TEXT("Current Yaw is : %f"), rotator.Yaw);
+		GetOwner()->SetActorRotation(rotator);
+		HasDoorOpened = false;
+	}
+}
+
 
