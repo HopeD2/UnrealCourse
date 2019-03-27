@@ -33,7 +33,8 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	{
 		OpenDoor();
 	}
-	else {
+	else 
+	{
 		CloseDoor();
 	}
 
