@@ -12,6 +12,9 @@ UOpenDoor::UOpenDoor()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	HasDoorOpened = false;
+	DoorLastOpenTime = 0.0f;
+	OpenDoorAngle = 90.0f;
+	DoorOpenDelayTime = 1.0f;
 }
 
 
@@ -21,6 +24,7 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	ActorThatOpensDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
+	Owner = GetOwner();
 }
 
 
@@ -32,10 +36,15 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	if (PressurePlate->IsOverlappingActor(ActorThatOpensDoor)) 
 	{
 		OpenDoor();
+		DoorLastOpenTime = GetWorld()->GetTimeSeconds();
 	}
 	else 
 	{
-		CloseDoor();
+		float curTime = GetWorld()->GetTimeSeconds();
+		if (curTime - DoorLastOpenTime > DoorOpenDelayTime) 
+		{
+			CloseDoor();
+		}
 	}
 
 }
@@ -43,11 +52,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 void UOpenDoor::OpenDoor()
 {
 	if (!HasDoorOpened) {
-		FRotator rotator = GetOwner()->GetActorRotation();
-		UE_LOG(LogTemp, Warning, TEXT("Current Yaw is : %f"), rotator.Yaw);
-		rotator.Yaw -= 90;
-		UE_LOG(LogTemp, Warning, TEXT("Current Yaw is : %f"), rotator.Yaw);
-		GetOwner()->SetActorRotation(rotator);
+		Owner->SetActorRotation(FRotator(0.0f,-OpenDoorAngle,0.0f));
 		HasDoorOpened = true;
 	}
 }
@@ -56,11 +61,7 @@ void UOpenDoor::CloseDoor()
 {
 	if (HasDoorOpened)
 	{
-		FRotator rotator = GetOwner()->GetActorRotation();
-		UE_LOG(LogTemp, Warning, TEXT("Current Yaw is : %f"), rotator.Yaw);
-		rotator.Yaw += 90;
-		UE_LOG(LogTemp, Warning, TEXT("Current Yaw is : %f"), rotator.Yaw);
-		GetOwner()->SetActorRotation(rotator);
+		Owner->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
 		HasDoorOpened = false;
 	}
 }
