@@ -3,6 +3,7 @@
 #include "TheGrabber.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include "Engine/Classes/Engine/World.h"
 
 #define OUT
 
@@ -22,8 +23,16 @@ void UTheGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	UE_LOG(LogTemp, Warning, TEXT("The Grabber is Online !!"));
+	// Get Physics Handle
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+
+	if (PhysicsHandle) {
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Physics Handle Missing for %s"),*GetOwner()->GetName());
+	}
 }
 
 
@@ -32,20 +41,21 @@ void UTheGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-
+	// Gets player ViewPoint as a vector and rotation object
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
 		OUT PlayerViewPointLocation,
 		OUT PlayerViewPointRotation
 	);
 
-	UE_LOG(LogTemp, Warning, TEXT("Player Location is : %s, Rotation is : %s"),
-		*PlayerViewPointLocation.ToString(),
-		*PlayerViewPointRotation.ToString()
-	);
+	//UE_LOG(LogTemp, Warning, TEXT("Player Location is : %s, Rotation is : %s"),
+	//	*PlayerViewPointLocation.ToString(),
+	//	*PlayerViewPointRotation.ToString()
+	//);
 
+	// Resultant vector of player location and where you are actually looking.
 	FVector LineTraceEnd = PlayerViewPointRotation.Vector() * Reach + PlayerViewPointLocation;
 
+	// Draw debug line for vector from PlayerViewPointLocation to LineTraceEnd
 	DrawDebugLine(GetWorld(),
 		PlayerViewPointLocation,
 		LineTraceEnd,
@@ -55,5 +65,20 @@ void UTheGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 		0,
 		10.0f
 	);
+
+	// LineTrace to check if a collision with Physics body is occurring
+	FHitResult HitResult;
+	bool hasHit = GetWorld()->LineTraceSingleByObjectType(
+		HitResult,
+		PlayerViewPointLocation,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),  // Type of Object Channel required.
+		FCollisionQueryParams(FName(TEXT("")), false, GetOwner())  // Additional behavior for collision params, eg: last param says what to ignore
+	);
+
+	if (hasHit) {
+		UE_LOG(LogTemp, Warning, TEXT("Line Trace Hit a %s"), *HitResult.GetActor()->GetName());
+	}
+
 }
 
