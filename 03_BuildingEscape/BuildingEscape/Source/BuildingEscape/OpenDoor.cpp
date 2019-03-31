@@ -23,8 +23,8 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ActorThatOpensDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
 	Owner = GetOwner();
+	ActorThatOpensDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 
