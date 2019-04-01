@@ -28,8 +28,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	FVector PlayerViewPointLocation;
-	FRotator PlayerViewPointRotation;
 	// Reach in cms to know how far we can reach
 	UPROPERTY(EditAnywhere)
 	float Reach = 100.0f;
@@ -52,4 +50,9 @@ private:
 
 	//Return hit for first physics body in reach
 	bool GetFirstPhysicsBodyInReach(FHitResult &HitResult);
+
+	//Calculate Line Trace End based on players location and viewpoint direction
+	FVector GetReachLineEnd();
+
+	FVector GetReachLineStart();
 };
