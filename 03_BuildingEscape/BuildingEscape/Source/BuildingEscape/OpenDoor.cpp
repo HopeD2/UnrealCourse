@@ -13,9 +13,6 @@ UOpenDoor::UOpenDoor()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	HasDoorOpened = false;
-	DoorLastOpenTime = 0.0f;
-	OpenDoorAngle = 90.0f;
-	DoorOpenDelayTime = 1.0f;
 }
 
 
@@ -44,15 +41,10 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	if (GetTotalMassOfActorsOnPressurePlate() > TriggerMass) 
 	{
 		OpenDoor();
-		DoorLastOpenTime = GetWorld()->GetTimeSeconds();
 	}
 	else 
 	{
-		float curTime = GetWorld()->GetTimeSeconds();
-		if (curTime - DoorLastOpenTime > DoorOpenDelayTime) 
-		{
-			CloseDoor();
-		}
+		CloseDoor();
 	}
 
 }
@@ -62,7 +54,8 @@ void UOpenDoor::OpenDoor()
 	if (!HasDoorOpened) {
 
 		if (Owner == nullptr) return;
-		Owner->SetActorRotation(FRotator(0.0f,-OpenDoorAngle,0.0f));
+		//Owner->SetActorRotation(FRotator(0.0f,-OpenDoorAngle,0.0f));
+		OnOpen.Broadcast();
 		HasDoorOpened = true;
 	}
 }
@@ -72,7 +65,7 @@ void UOpenDoor::CloseDoor()
 	if (HasDoorOpened)
 	{
 		if (Owner == nullptr) return;
-		Owner->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
+		OnClose.Broadcast();
 		HasDoorOpened = false;
 	}
 }

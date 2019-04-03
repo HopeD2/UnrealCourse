@@ -8,6 +8,8 @@
 #include "Engine/TriggerVolume.h"
 #include "OpenDoor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorEvent);
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGESCAPE_API UOpenDoor : public UActorComponent
@@ -30,6 +32,12 @@ public:
 	
 	void CloseDoor();
 
+	UPROPERTY(BlueprintAssignable)
+	FDoorEvent OnOpen;
+
+	UPROPERTY(BlueprintAssignable)
+	FDoorEvent OnClose;
+
 private : 
 	float GetTotalMassOfActorsOnPressurePlate();
 
@@ -38,17 +46,9 @@ private:
 	ATriggerVolume *PressurePlate = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	float OpenDoorAngle;
-
-	UPROPERTY(EditAnywhere)
-	float DoorOpenDelayTime;
-
-	UPROPERTY(EditAnywhere)
 	float TriggerMass = 50.0f;
 
 	bool HasDoorOpened;
-
-	float DoorLastOpenTime;
 
 	AActor *Owner = nullptr;
 };
