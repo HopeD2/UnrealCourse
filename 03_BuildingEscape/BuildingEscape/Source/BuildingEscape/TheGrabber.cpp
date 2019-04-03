@@ -35,6 +35,7 @@ void UTheGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	//If the physics handle is attached
+	if (PhysicsHandle == nullptr) { return; }
 	if (PhysicsHandle->GrabbedComponent) {
 		PhysicsHandle->SetTargetLocation(GetReachLineEnd());
 	}
@@ -49,6 +50,7 @@ void UTheGrabber::Grab() {
 
 	// Attach physics handle only if we hit something
 	if (HasHit) {
+		if (PhysicsHandle == nullptr) { return; }
 		PhysicsHandle->GrabComponent(
 			ComponentToGrab,
 			NAME_None,
@@ -60,6 +62,7 @@ void UTheGrabber::Grab() {
 }
 
 void UTheGrabber::Release() {
+	if (PhysicsHandle == nullptr) { return; }
 	PhysicsHandle->ReleaseComponent();
 }
 

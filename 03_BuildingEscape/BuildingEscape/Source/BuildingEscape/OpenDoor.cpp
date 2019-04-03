@@ -25,6 +25,14 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	Owner = GetOwner();
+	if (Owner == nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("No Owner found!"));
+	}
+
+	if (PressurePlate == nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("PressurePlate is empty, No Trigger Volume Assigned!"));
+		return;
+	}
 }
 
 
@@ -52,6 +60,8 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 void UOpenDoor::OpenDoor()
 {
 	if (!HasDoorOpened) {
+
+		if (Owner == nullptr) return;
 		Owner->SetActorRotation(FRotator(0.0f,-OpenDoorAngle,0.0f));
 		HasDoorOpened = true;
 	}
@@ -61,6 +71,7 @@ void UOpenDoor::CloseDoor()
 {
 	if (HasDoorOpened)
 	{
+		if (Owner == nullptr) return;
 		Owner->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
 		HasDoorOpened = false;
 	}
@@ -72,6 +83,7 @@ float UOpenDoor::GetTotalMassOfActorsOnPressurePlate()
 
 	///Get All actors overlapping the pressure plate(trigger Volume) and store them in a TArray
 	TArray<AActor*> OverlappingActors;
+	if (PressurePlate == nullptr) { return 0; }
 	PressurePlate->GetOverlappingActors(OverlappingActors);
 
 	for (auto* Actor : OverlappingActors) {
