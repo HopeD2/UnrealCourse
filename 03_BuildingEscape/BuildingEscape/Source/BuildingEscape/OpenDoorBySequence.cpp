@@ -65,6 +65,7 @@ void UOpenDoorBySequence::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 	int j = 0;
 
+	// Always check for violet first and proceed accordingly. OR was really useful here to activate and deactivate required code segments.
 	if (TriggerCapsuleViolet->IsOverlappingActor(ActorThatOpens)  || currentTriggerCollection[0]) {
 		currentTriggerCollection[j++] = true;
 		if (TriggerCapsuleIndigo->IsOverlappingActor(ActorThatOpens) || currentTriggerCollection[1]) {
@@ -88,6 +89,7 @@ void UOpenDoorBySequence::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		}
 	}
 
+	// Reset in case other color is stepped on
 	for (size_t i = 0; i < TriggerColorCollection.size(); i++)
 	{
 		if (i == j-1) {
@@ -98,11 +100,6 @@ void UOpenDoorBySequence::TickComponent(float DeltaTime, ELevelTick TickType, FA
 			currentTriggerCollection[j-1] = false;
 			IsSequenceComplete = false;
 		}
-	}
-
-	for (size_t i = 0; i < TriggerColorCollection.size(); i++)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("CurrentTriggerCollection[%d] : %d"),i, currentTriggerCollection[i]);
 	}
 
 	if (IsSequenceComplete) {
