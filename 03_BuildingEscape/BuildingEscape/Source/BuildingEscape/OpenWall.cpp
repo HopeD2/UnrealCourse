@@ -25,10 +25,15 @@ void UOpenWall::BeginPlay()
 
 	for (AActor* actor : FoundActors)
 	{
-		if (actor->GetName().Contains("Room3_Lamp_Wall")) {
-			WallLamps.Push(actor);
+		if (actor->GetName().Contains("Room3_Lamp")) {
+			WallLamps.push_back(actor);
 		}
 	}
+
+	/*for (AActor* Lamp : WallLamps)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Actor : %s"),*Lamp->GetName());
+	}*/
 
 	Owner = GetOwner();
 	if (Owner == nullptr) {
@@ -43,9 +48,10 @@ void UOpenWall::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	bool AreAllLampsInCorrectPosition = false;
-	for (AActor* Lamp : WallLamps)
+
+	for (size_t i = 0; i < WallLamps.size(); i++)
 	{
-		if (Lamp->GetActorRotation().Roll == 0) {
+		if ((int)WallLamps[i]->GetActorRotation().Roll == 0) {
 			AreAllLampsInCorrectPosition = true;
 		}
 		else {

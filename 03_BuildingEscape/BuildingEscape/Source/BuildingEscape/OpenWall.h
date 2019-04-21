@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include <vector>
 #include "OpenWall.generated.h"
 
 
@@ -27,7 +28,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	TArray<AActor*> WallLamps;
+	std::vector<AActor*> WallLamps;
 		
 	AActor* Owner = nullptr;
 
