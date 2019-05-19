@@ -34,6 +34,17 @@ void UTheGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	/*DrawDebugLine(
+		GetWorld(),
+		GetReachLineStart(),
+		GetReachLineEnd(),
+		FColor(255, 0, 0),
+		false,
+		0.0f,
+		0.0f,
+		10.0f
+	);*/
+
 	//If the physics handle is attached
 	if (PhysicsHandle == nullptr) { return; }
 	if (PhysicsHandle->GrabbedComponent) {

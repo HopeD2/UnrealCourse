@@ -30,11 +30,6 @@ void UOpenWall::BeginPlay()
 		}
 	}
 
-	/*for (AActor* Lamp : WallLamps)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Actor : %s"),*Lamp->GetName());
-	}*/
-
 	Owner = GetOwner();
 	if (Owner == nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("No Owner found!"));
@@ -62,11 +57,16 @@ void UOpenWall::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	if (AreAllLampsInCorrectPosition) {
 		if (!HasWallOpened) {
-			FRotator WallRotation = Owner->GetActorRotation();
+			OnOpen.Broadcast();
+			/*FRotator WallRotation = Owner->GetActorRotation();
 			WallRotation.Pitch += -90;
-			Owner->SetActorRotation(WallRotation);
+			Owner->SetActorRotation(WallRotation);*/
 			HasWallOpened = true;
 		}
+	}
+	else {
+		OnClose.Broadcast();
+		HasWallOpened = false;
 	}
 }
 

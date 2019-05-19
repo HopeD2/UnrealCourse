@@ -9,6 +9,8 @@
 #include <vector>
 #include "OpenWall.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWallEvent);
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGESCAPE_API UOpenWall : public UActorComponent
@@ -33,4 +35,10 @@ private:
 	AActor* Owner = nullptr;
 
 	bool HasWallOpened = false;
+
+	UPROPERTY(BlueprintAssignable)
+	FWallEvent OnOpen;
+
+	UPROPERTY(BlueprintAssignable)
+	FWallEvent OnClose;
 };

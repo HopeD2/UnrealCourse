@@ -31,7 +31,7 @@ private:
 	// Reach in cms to know how far we can reach
 	UPROPERTY(EditAnywhere)
 	float Reach = 100.0f;
-
+	
 	UPhysicsHandleComponent *PhysicsHandle = nullptr;
 
 	UInputComponent *InputComponent = nullptr;
